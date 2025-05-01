@@ -385,7 +385,7 @@
           <div class="tab-pane fade show active" id="nav-sunday" role="tabpanel" aria-labelledby="nav-sunday-tab">
             <div class="row">
               <div class="col-lg-6">
-                <div class="class-item d-flex align-items-center">
+                <!-- <div class="class-item d-flex align-items-center">
                   <a href="single.html" class="class-item-thumbnail">
                     <img src="images/img_1.jpg" alt="Image">
                   </a>
@@ -443,8 +443,7 @@
                     <span>By Justin Daniel</span>,
                     <span>30 minutes</span>
                   </div>
-                </div>
-
+                </div> -->
 
               </div>
               <div class="col-lg-6">
@@ -1458,7 +1457,7 @@
         <div class="row justify-content-center text-center mb-5">
           <div class="col-md-8  section-heading">
             <span class="subheading">Get In Touch</span>
-            <h2 class="heading mb-3">Contact Us</h2>
+            <h2 id="contact-head" class="heading mb-3">Contact Us</h2>
             <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the
               blind
               texts.
@@ -1470,13 +1469,16 @@
           <!-- Nav tabs -->
           <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="true">Contact Us</a>
+              <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                aria-controls="contact" aria-selected="true">Contact Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+              <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                aria-controls="register" aria-selected="false">Register</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="false">Sign In</a>
+              <a class="nav-link" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin"
+                aria-selected="false">Sign In</a>
             </li>
           </ul>
 
@@ -1493,13 +1495,14 @@
                       <input type="text" class="form-control" placeholder="Last name">
                     </div>
                   </div>
-    
+
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <input type="text" class="form-control" placeholder="Subject">
+                      <!-- <input type="text" class="form-control" placeholder="Subject"> -->
+                       <select name="subject-list" id="subject-list" class="form-control"></select>
                     </div>
                   </div>
-    
+
                   <div class="form-group row">
                     <div class="col-md-12">
                       <input type="email" class="form-control" placeholder="Email">
@@ -1511,14 +1514,14 @@
                         placeholder="Write your message here."></textarea>
                     </div>
                   </div>
-    
+
                   <div class="form-group row">
                     <div class="col-md-6">
-    
+
                       <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
                     </div>
                   </div>
-    
+
                 </form>
               </div>
             </div>
@@ -1578,7 +1581,7 @@
 
                   <div class="form-group row">
                     <div class="col-md-6">
-                      <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Sign In">
+                      <input type="submit" class="btn btn-primary py-3 px-10 btn-block" value="Sign In">
                     </div>
                   </div>
                 </form>
@@ -1665,9 +1668,102 @@
   <script src="js/jquery.mb.YTPlayer.min.js"></script>
 
 
-
-
   <script src="js/main.js"></script>
+
+  <script>
+    window.onload = function () {
+      // loadDoc("xml/class_sunday.xml", myFunction);
+      const head = document.getElementById("contact-head");
+      head.innerHTML = "KKKKK";
+    }
+
+    loadDoc("xml/class_sunday.xml", classXML);
+
+    loadDoc("./json/class_sunday.json", classJSON);
+
+    loadSubject();
+
+    function loadDoc(url, cFunction) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onload = function () { cFunction(this); }
+      xhttp.open("GET", url);
+      xhttp.send();
+    }
+
+    function classXML(xmlData) {
+      var xmlDoc = xmlData.responseXML;
+      var html_text = "";
+      var classes = xmlDoc.getElementsByTagName("class");
+      for (let i = 0; i < classes.length; i++) {
+        const classElement = classes[i];
+        const singlePage = classElement.getElementsByTagName("single-page")[0].childNodes[0].nodeValue;
+        const image = classElement.getElementsByTagName("image")[0].childNodes[0].nodeValue;
+        const time = classElement.getElementsByTagName("time")[0].childNodes[0].nodeValue;
+        const name = classElement.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+        const instructor = classElement.getElementsByTagName("instructor")[0].childNodes[0].nodeValue;
+        const duration = classElement.getElementsByTagName("duration")[0].childNodes[0].nodeValue;
+        html_text += `<div class="class-item d-flex align-items-center">
+          <a href="${singlePage}" class="class-item-thumbnail">
+            <img src="${image}" alt="Image">
+          </a>
+          <div class="class-item-text">
+            <span>${time}</span>
+            <h2><a href="${singlePage}">${name}</a></h2>
+            <span>${instructor}</span>,
+            <span>${duration}</span>
+          </div>
+        </div>`;
+      }
+      
+      console.log(html_text);
+      document.getElementById("nav-sunday").children[0].children[0].innerHTML = html_text;
+    }
+
+    function classJSON(jsonData) {
+      const jsonDoc = jsonData.responseText;
+      const jsonObj = JSON.parse(jsonDoc);
+      let html_text = "";
+      for (let i in jsonObj.classes) {
+        const classElement = jsonObj.classes[i];
+        const singlePage = classElement["single-page"];
+        const image = classElement["image"];
+        const time = classElement["time"];
+        const name = classElement["name"];
+        const instructor = classElement["instructor"];
+        const duration = classElement["duration"];
+        console.log(classElement);
+        html_text += `<div class="class-item d-flex align-items-center">
+          <a href="${singlePage}" class="class-item-thumbnail">
+            <img src="${image}" alt="Image">
+          </a>
+          <div class="class-item-text">
+            <span>${time}</span>
+            <h2><a href="${singlePage}">${name}</a></h2>
+            <span>${instructor}</span>,
+            <span>${duration}</span>
+          </div>
+        </div>`;
+      }
+
+      document.getElementById("nav-sunday").children[0].children[1].innerHTML = html_text;
+    }
+
+    function loadSubject() {
+      fetch("./json/contact_subject.json").then(res => res.json()).then(data => {
+        subjectList(data);
+      });
+    }
+
+    function subjectList(data) {
+      const select = document.getElementById("subject-list");
+      data.contactSubject.forEach(job => {
+        const option = document.createElement("option");
+        option.value = job;
+        option.innerHTML = job;
+        select.appendChild(option);
+      });
+    }
+  </script>
 
 </body>
 

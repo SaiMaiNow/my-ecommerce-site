@@ -1486,31 +1486,31 @@
           <div class="tab-content">
             <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
               <div>
-                <form method="post" data-aos="fade">
+                <form  id="contact-form" method="post" data-aos="fade" target="http://localhost:4400/api/contact">
                   <div class="form-group row">
                     <div class="col-md-6 mb-3 mb-lg-0">
-                      <input type="text" class="form-control" placeholder="First name">
+                      <input type="text" class="form-control" placeholder="First name" id="fname" name="fname">
                     </div>
                     <div class="col-md-6">
-                      <input type="text" class="form-control" placeholder="Last name">
+                      <input type="text" class="form-control" placeholder="Last name" id="lname" name="lname">
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <div class="col-md-12">
                       <!-- <input type="text" class="form-control" placeholder="Subject"> -->
-                       <select name="subject-list" id="subject-list" class="form-control"></select>
+                      <select name="subject" id="subject-list" class="form-control"></select>
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <input type="email" class="form-control" placeholder="Email">
+                      <input type="email" class="form-control" placeholder="Email" id="email" name="email">
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <textarea class="form-control" id="" cols="30" rows="10"
+                      <textarea class="form-control" id="message" cols="30" rows="10"
                         placeholder="Write your message here."></textarea>
                     </div>
                   </div>
@@ -1530,7 +1530,7 @@
                 <form method="post" data-aos="fade">
                   <div class="form-group row">
                     <div class="col-md-6 mb-3 mb-lg-0">
-                      <input type="text" class="form-control" placeholder="First name">
+                      <input type="text" class="form-control" placeholder="First name" >
                     </div>
                     <div class="col-md-6">
                       <input type="text" class="form-control" placeholder="Last name">
@@ -1671,17 +1671,6 @@
   <script src="js/main.js"></script>
 
   <script>
-    window.onload = function () {
-      // loadDoc("xml/class_sunday.xml", myFunction);
-      const head = document.getElementById("contact-head");
-      head.innerHTML = "KKKKK";
-    }
-
-    loadDoc("xml/class_sunday.xml", classXML);
-
-    loadDoc("./json/class_sunday.json", classJSON);
-
-    loadSubject();
 
     function loadDoc(url, cFunction) {
       const xhttp = new XMLHttpRequest();
@@ -1714,7 +1703,7 @@
           </div>
         </div>`;
       }
-      
+
       console.log(html_text);
       document.getElementById("nav-sunday").children[0].children[0].innerHTML = html_text;
     }
@@ -1748,8 +1737,8 @@
       document.getElementById("nav-sunday").children[0].children[1].innerHTML = html_text;
     }
 
-    function loadSubject() {
-      fetch("./json/contact_subject.json").then(res => res.json()).then(data => {
+    function loadSubject(url) {
+      fetch(url).then(res => res.json()).then(data => {
         subjectList(data);
       });
     }
@@ -1762,6 +1751,18 @@
         option.innerHTML = job;
         select.appendChild(option);
       });
+    }
+
+    window.onload = function () {
+      const head = document.getElementById("contact-head");
+      head.innerHTML = "KKKKK";
+
+      loadDoc("xml/class_sunday.xml", classXML);
+
+      loadDoc("./json/class_sunday.json", classJSON);
+
+      // loadSubject("./json/contact_subject.json");
+      loadSubject("http://localhost:4400/api/subject");
     }
   </script>
 
